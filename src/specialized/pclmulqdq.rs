@@ -11,6 +11,7 @@
 use core::arch::x86 as arch;
 #[cfg(target_arch = "x86_64")]
 use core::arch::x86_64 as arch;
+use crate::{baseline, combine};
 
 #[derive(Clone)]
 pub struct State {
@@ -61,7 +62,7 @@ impl State {
     }
 
     pub fn combine(&mut self, other: u32, amount: u64) {
-        self.state = ::combine::combine(self.state, other, amount);
+        self.state = combine::combine(self.state, other, amount);
     }
 }
 
@@ -102,7 +103,7 @@ unsafe fn calculate(crc: u32, mut data: &[u8]) -> u32 {
     // the fallback implementation as it's too much hassle and doesn't seem too
     // beneficial.
     if data.len() < 128 {
-        return ::baseline::update_fast_16(crc, data);
+        return baseline::update_fast_16(crc, data);
     }
 
     // Step 1: fold by 4 loop
