@@ -1,4 +1,5 @@
-use table::CRC32_TABLE;
+use crate::table::CRC32_TABLE;
+use crate::combine;
 
 #[derive(Clone)]
 pub struct State {
@@ -6,7 +7,7 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(state: u32) -> Self {
+    pub const fn new(state: u32) -> Self {
         State { state }
     }
 
@@ -14,7 +15,7 @@ impl State {
         self.state = update_fast_16(self.state, buf);
     }
 
-    pub fn finalize(self) -> u32 {
+    pub const fn finalize(self) -> u32 {
         self.state
     }
 
@@ -23,11 +24,11 @@ impl State {
     }
 
     pub fn combine(&mut self, other: u32, amount: u64) {
-        self.state = ::combine::combine(self.state, other, amount);
+        self.state = combine::combine(self.state, other, amount);
     }
 }
 
-pub(crate) fn update_fast_16(prev: u32, mut buf: &[u8]) -> u32 {
+pub fn update_fast_16(prev: u32, mut buf: &[u8]) -> u32 {
     const UNROLL: usize = 4;
     const BYTES_AT_ONCE: usize = 16 * UNROLL;
 
@@ -50,7 +51,7 @@ pub(crate) fn update_fast_16(prev: u32, mut buf: &[u8]) -> u32 {
                 ^ CRC32_TABLE[0xc][buf[0x3] as usize ^ ((crc >> 0x18) & 0xFF) as usize]
                 ^ CRC32_TABLE[0xd][buf[0x2] as usize ^ ((crc >> 0x10) & 0xFF) as usize]
                 ^ CRC32_TABLE[0xe][buf[0x1] as usize ^ ((crc >> 0x08) & 0xFF) as usize]
-                ^ CRC32_TABLE[0xf][buf[0x0] as usize ^ ((crc >> 0x00) & 0xFF) as usize];
+                ^ CRC32_TABLE[0xf][buf[0x0] as usize ^ (crc & 0xFF) as usize];
             buf = &buf[16..];
         }
     }
@@ -58,10 +59,10 @@ pub(crate) fn update_fast_16(prev: u32, mut buf: &[u8]) -> u32 {
     update_slow(!crc, buf)
 }
 
-pub(crate) fn update_slow(prev: u32, buf: &[u8]) -> u32 {
+pub fn update_slow(prev: u32, buf: &[u8]) -> u32 {
     let mut crc = !prev;
 
-    for &byte in buf.iter() {
+    for &byte in buf {
         crc = CRC32_TABLE[0][((crc as u8) ^ byte) as usize] ^ (crc >> 8);
     }
 
