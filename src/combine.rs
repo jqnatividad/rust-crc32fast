@@ -1,6 +1,6 @@
 const GF2_DIM: usize = 32;
 
-fn gf2_matrix_times(mat: &[u32; GF2_DIM], mut vec: u32) -> u32 {
+const fn gf2_matrix_times(mat: &[u32; GF2_DIM], mut vec: u32) -> u32 {
     let mut sum = 0;
     let mut idx = 0;
     while vec > 0 {
@@ -10,7 +10,7 @@ fn gf2_matrix_times(mat: &[u32; GF2_DIM], mut vec: u32) -> u32 {
         vec >>= 1;
         idx += 1;
     }
-    return sum;
+    sum
 }
 
 fn gf2_matrix_square(square: &mut [u32; GF2_DIM], mat: &[u32; GF2_DIM]) {
@@ -19,21 +19,27 @@ fn gf2_matrix_square(square: &mut [u32; GF2_DIM], mat: &[u32; GF2_DIM]) {
     }
 }
 
-pub(crate) fn combine(mut crc1: u32, crc2: u32, mut len2: u64) -> u32 {
+pub fn combine(mut crc1: u32, crc2: u32, mut len2: u64) -> u32 {
     let mut row: u32;
     let mut even = [0u32; GF2_DIM]; /* even-power-of-two zeros operator */
     let mut odd = [0u32; GF2_DIM]; /* odd-power-of-two zeros operator */
 
+    // commenting out as u64 will never be negative
     /* degenerate case (also disallow negative lengths) */
-    if len2 <= 0 {
-        return crc1;
-    }
+    // if len2 <= 0 {
+    //     return crc1;
+    // }
 
     /* put operator for one zero bit in odd */
     odd[0] = 0xedb88320; /* CRC-32 polynomial */
     row = 1;
-    for n in 1..GF2_DIM {
-        odd[n] = row;
+    // for n in 1..GF2_DIM {
+    //     odd[n] = row;
+    //     row <<= 1;
+    // }
+    // a faster version of the for loop above as we're using iterators, not an index
+    for odd_iter in odd.iter_mut().take(GF2_DIM).skip(1) {
+        *odd_iter = row;
         row <<= 1;
     }
 
@@ -73,5 +79,5 @@ pub(crate) fn combine(mut crc1: u32, crc2: u32, mut len2: u64) -> u32 {
 
     /* return combined crc */
     crc1 ^= crc2;
-    return crc1;
+    crc1
 }
