@@ -191,7 +191,7 @@ unsafe fn calculate(crc: u32, mut data: &[u8]) -> u32 {
     let c = arch::_mm_extract_epi32(arch::_mm_xor_si128(x, t2), 1) as u32;
 
     if !data.is_empty() {
-        ::baseline::update_fast_16(!c, data)
+        baseline::update_fast_16(!c, data)
     } else {
         !c
     }
