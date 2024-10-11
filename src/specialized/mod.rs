@@ -12,23 +12,23 @@ cfg_if! {
         #[derive(Clone)]
         pub enum State {}
         impl State {
-            pub fn new(_: u32) -> Option<Self> {
+            pub const fn new(_: u32) -> Option<Self> {
                 None
             }
 
-            pub fn update(&mut self, _buf: &[u8]) {
+            pub const fn update(&self, _buf: &[u8]) {
                 match *self {}
             }
 
-            pub fn finalize(self) -> u32 {
+            pub const fn finalize(self) -> u32 {
                 match self{}
             }
 
-            pub fn reset(&mut self) {
+            pub const fn reset(&self) {
                 match *self {}
             }
 
-            pub fn combine(&mut self, _other: u32, _amount: u64) {
+            pub const fn combine(&self, _other: u32, _amount: u64) {
                 match *self {}
             }
         }

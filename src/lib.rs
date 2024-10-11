@@ -108,7 +108,7 @@ impl Hasher {
 
     #[doc(hidden)]
     // Internal-only API. Don't use.
-    pub fn internal_new_baseline(init: u32, amount: u64) -> Self {
+    const fn internal_new_baseline(init: u32, amount: u64) -> Self {
         Hasher {
             amount,
             state: State::Baseline(baseline::State::new(init)),
@@ -117,7 +117,7 @@ impl Hasher {
 
     #[doc(hidden)]
     // Internal-only API. Don't use.
-    pub fn internal_new_specialized(init: u32, amount: u64) -> Option<Self> {
+    fn internal_new_specialized(init: u32, amount: u64) -> Option<Self> {
         {
             if let Some(state) = specialized::State::new(init) {
                 return Some(Hasher {
@@ -139,7 +139,7 @@ impl Hasher {
     }
 
     /// Finalize the hash state and return the computed CRC32 value.
-    pub fn finalize(self) -> u32 {
+    pub const fn finalize(self) -> u32 {
         match self.state {
             State::Baseline(state) => state.finalize(),
             State::Specialized(state) => state.finalize(),
@@ -180,7 +180,7 @@ impl Default for Hasher {
 
 impl hash::Hasher for Hasher {
     fn write(&mut self, bytes: &[u8]) {
-        self.update(bytes)
+        self.update(bytes);
     }
 
     fn finish(&self) -> u64 {

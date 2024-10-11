@@ -1,4 +1,5 @@
 use core::arch::aarch64 as arch;
+use crate::combine;
 
 #[derive(Clone)]
 pub struct State {
@@ -7,7 +8,7 @@ pub struct State {
 
 impl State {
     #[cfg(not(feature = "std"))]
-    pub fn new(state: u32) -> Option<Self> {
+    pub const fn new(state: u32) -> Option<Self> {
         if cfg!(target_feature = "crc") {
             // SAFETY: The conditions above ensure that all
             //         required instructions are supported by the CPU.
@@ -34,7 +35,7 @@ impl State {
         self.state = unsafe { calculate(self.state, buf) }
     }
 
-    pub fn finalize(self) -> u32 {
+    pub const fn finalize(self) -> u32 {
         self.state
     }
 
@@ -43,7 +44,7 @@ impl State {
     }
 
     pub fn combine(&mut self, other: u32, amount: u64) {
-        self.state = ::combine::combine(self.state, other, amount);
+        self.state = combine::combine(self.state, other, amount);
     }
 }
 
