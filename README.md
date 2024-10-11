@@ -11,6 +11,8 @@ _Fast, SIMD-accelerated CRC32 (IEEE) checksum computation_
 
 ## Usage
 
+> NOTE: This is a qsv-optimized fork, modernized to use 2021 edition, MSRV 1.81 and select clippy lints applied
+
 ### Simple usage
 
 For simple use-cases, you can call the `hash` convenience function to
