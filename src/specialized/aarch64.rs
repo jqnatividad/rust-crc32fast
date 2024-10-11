@@ -1,5 +1,5 @@
-use core::arch::aarch64 as arch;
 use crate::combine;
+use core::arch::aarch64 as arch;
 
 #[derive(Clone)]
 pub struct State {

@@ -1,5 +1,5 @@
-use crate::table::CRC32_TABLE;
 use crate::combine;
+use crate::table::CRC32_TABLE;
 
 #[derive(Clone)]
 pub struct State {

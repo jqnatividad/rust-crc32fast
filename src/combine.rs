@@ -50,7 +50,7 @@ pub fn combine(mut crc1: u32, crc2: u32, mut len2: u64) -> u32 {
     gf2_matrix_square(&mut odd, &even);
 
     /* apply len2 zeros to crc1 (first square will put the operator for one
-       zero byte, eight zero bits, in even) */
+    zero byte, eight zero bits, in even) */
     loop {
         /* apply zeros operator for this bit of len2 */
         gf2_matrix_square(&mut even, &odd);
