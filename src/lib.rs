@@ -58,7 +58,7 @@ mod table;
 /// Computes the CRC32 hash of a byte slice.
 ///
 /// Check out [`Hasher`] for more advanced use-cases.
-pub fn hash(buf: &[u8]) -> u32 {
+#[must_use] pub fn hash(buf: &[u8]) -> u32 {
     let mut h = Hasher::new();
     h.update(buf);
     h.finalize()
@@ -84,7 +84,7 @@ impl Hasher {
     ///
     /// This will perform a CPU feature detection at runtime to select the most
     /// optimal implementation for the current processor architecture.
-    pub fn new() -> Self {
+    #[must_use] pub fn new() -> Self {
         Self::new_with_initial(DEFAULT_INIT_STATE)
     }
 
@@ -92,7 +92,7 @@ impl Hasher {
     ///
     /// This works just like `Hasher::new`, except that it allows for an initial
     /// CRC32 state to be passed in.
-    pub fn new_with_initial(init: u32) -> Self {
+    #[must_use] pub fn new_with_initial(init: u32) -> Self {
         Self::new_with_initial_len(init, 0)
     }
 
@@ -101,7 +101,7 @@ impl Hasher {
     /// As `new_with_initial`, but also accepts a length (in bytes). The
     /// resulting object can then be used with `combine` to compute `crc(a ||
     /// b)` from `crc(a)`, `crc(b)`, and `len(b)`.
-    pub fn new_with_initial_len(init: u32, amount: u64) -> Self {
+    #[must_use] pub fn new_with_initial_len(init: u32, amount: u64) -> Self {
         Self::internal_new_specialized(init, amount)
             .unwrap_or_else(|| Self::internal_new_baseline(init, amount))
     }
@@ -139,7 +139,7 @@ impl Hasher {
     }
 
     /// Finalize the hash state and return the computed CRC32 value.
-    pub const fn finalize(self) -> u32 {
+    #[must_use] pub const fn finalize(self) -> u32 {
         match self.state {
             State::Baseline(state) => state.finalize(),
             State::Specialized(state) => state.finalize(),
