@@ -12,7 +12,7 @@ readme = "README.md"
 keywords = ["hash", "crc", "crc32", "simd", "fast"]
 categories = ["algorithms", "no-std"]
 edition = "2021"
-rust-version = "1.81"
+rust-version = "1.82"
 
 [dependencies]
 cfg-if = "1.0"
