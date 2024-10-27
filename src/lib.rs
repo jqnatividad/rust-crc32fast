@@ -121,7 +121,7 @@ impl Hasher {
 
     #[doc(hidden)]
     // Internal-only API. Don't use.
-    fn internal_new_specialized(init: u32, amount: u64) -> Option<Self> {
+    const fn internal_new_specialized(init: u32, amount: u64) -> Option<Self> {
         {
             if let Some(state) = specialized::State::new(init) {
                 return Some(Hasher {
