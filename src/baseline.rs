@@ -52,7 +52,7 @@ pub fn update_fast_16(prev: u32, mut buf: &[u8]) -> u32 {
                 ^ CRC32_TABLE[0xc][buf[offset + 0x3] as usize ^ ((crc >> 0x18) & 0xFF) as usize]
                 ^ CRC32_TABLE[0xd][buf[offset + 0x2] as usize ^ ((crc >> 0x10) & 0xFF) as usize]
                 ^ CRC32_TABLE[0xe][buf[offset + 0x1] as usize ^ ((crc >> 0x08) & 0xFF) as usize]
-                ^ CRC32_TABLE[0xf][buf[offset + 0x0] as usize ^ (crc & 0xFF) as usize];
+                ^ CRC32_TABLE[0xf][buf[offset] as usize ^ (crc & 0xFF) as usize];
             buf = &buf[BYTES_AT_ONCE..];
         }
     }
